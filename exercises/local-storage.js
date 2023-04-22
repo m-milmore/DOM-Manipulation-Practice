@@ -38,3 +38,32 @@
  */
 
 // Your code goes here...
+const getStorageData = () => {
+  const storageData = localStorage.getItem("favorites");
+  if (storageData) return JSON.parse(storageData);
+  return { items: [] };
+};
+
+const init = () => {
+  const allCards = document.querySelectorAll(".card");
+  const data = getStorageData();
+  allCards.forEach(
+    (card) => data.items.includes(card.id) && card.classList.add("red")
+  );
+};
+
+const callbackFn = (e) => {
+  const data = getStorageData();
+  if (e.target.classList.contains("red")) {
+    e.target.classList.remove("red");
+    data.items.splice(data.items.indexOf(e.target.id), 1);
+  } else {
+    e.target.classList.add("red");
+    data.items.push(e.target.id);
+  }
+  localStorage.setItem("favorites", JSON.stringify(data));
+};
+
+const container = document.querySelector(".cardsContainer");
+container.addEventListener("click", callbackFn);
+init();
